@@ -38,27 +38,37 @@ public class Gateway {
     }
 
     public static void main(String[] args) {
-        if (args.length<1){
+        if (args.length < 1) {
             System.out.println("No argument");
             return;
         }
-        long seed;
+
         try {
-            seed = Long.parseLong(args[0]);
+            long seed = Long.parseLong(args[0]);
+            if (args.length == 2) {
+                try {
+                    run(seed, Integer.parseInt(args[1]));
+                } catch (NumberFormatException e) {
+                    System.out.println("Wrong max count");
+                }
+
+            } else {
+                run(seed, 5);
+            }
         } catch (NumberFormatException e) {
             System.out.println("Wrong seed");
-            return;
         }
-        run(seed);
+
 
     }
-    public static int sub(int x,int z, long seed,int count){
-        if (16 * 16 * (x * x + z * z) > 4096) {
-            GatewayChunk c = Gateway.getGatewayChunk(x, z);
+
+    public static int sub(int chunkX, int chunkZ, long seed, int count) {
+        if ((chunkX * chunkX + chunkZ * chunkZ) > 4096) {
+            GatewayChunk c = Gateway.getGatewayChunk(chunkX, chunkZ);
             if (c != null) {
                 if ((c.px < 16) && (c.pz == 23)) {
                     EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
-                    Biome biome = source.getBiome(16 * x, 0, 16 * z);
+                    Biome biome = source.getBiome(16 * chunkX, 0, 16 * chunkZ);
                     if (biome == Biome.END_HIGHLANDS) {
                         System.out.println("/tp @p " + 16 * c.cx + " 90 " + 16 * c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
                         if (count < 0) {
@@ -72,18 +82,20 @@ public class Gateway {
         }
         return count;
     }
-    public static void run(long seed) {
-        int count=5;
+
+    public static void run(long seed, int max_count) {
+        int count = max_count;
+        count = sub(0, 0, seed, count);
         for (int r = 0; r < 10000; r++) {
             for (int x = -r; x < r; x++) {
-                count=sub(x,-r,seed,count);
-                count=sub(x,r,seed,count);
+                count = sub(x, -r, seed, count);
+                count = sub(x, r, seed, count);
             }
             for (int z = -r; z < r; z++) {
-                count=sub(-r,z,seed,count);
-                count=sub(r,z,seed,count);
+                count = sub(-r, z, seed, count);
+                count = sub(r, z, seed, count);
             }
-            if (count<0){
+            if (count < 0) {
                 return;
             }
         }
