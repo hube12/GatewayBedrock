@@ -60,11 +60,11 @@ public class Gateway {
                 if (16 * 16 * (x * x + z * z) > 4096) {
                     GatewayChunk c = Gateway.getGatewayChunk(x, z);
                     if (c != null) {
-                        if ((c.px == 23) && (c.pz < 16)) {
-                            EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
-                            Biome biome = source.getBiome(16 * x, 0, 16 * z);
-                            if (biome == Biome.END_HIGHLANDS)
-                                System.out.println(16 * c.cx + " 90 " + 16 * c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
+                        if ((c.px < 16) && (c.pz == 23)) {
+                            EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, -5048028729915242884L);
+                            Biome biome = source.getBiome(16*x, 0, 16*z);
+                            if(biome == Biome.END_HIGHLANDS)
+                                System.out.println("/tp @p " +16*c.cx + " 90 " + 16*c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
                         }
                     }
                 }
