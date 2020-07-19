@@ -54,7 +54,8 @@ public class Gateway {
     }
 
     public static void run(long seed) {
-        int r = 1000;
+        int count=5;
+        int r = 10000;
         for (int x = -r; x < r; x++) {
             for (int z = -r; z < r; z++) {
                 if (16 * 16 * (x * x + z * z) > 4096) {
@@ -63,8 +64,14 @@ public class Gateway {
                         if ((c.px < 16) && (c.pz == 23)) {
                             EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
                             Biome biome = source.getBiome(16*x, 0, 16*z);
-                            if(biome == Biome.END_HIGHLANDS)
+                            if(biome == Biome.END_HIGHLANDS){
                                 System.out.println("/tp @p " +16*c.cx + " 90 " + 16*c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
+                                if (count<0){
+                                    return;
+                                }
+                                count--;
+                            }
+
                         }
                     }
                 }

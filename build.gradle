@@ -14,6 +14,11 @@ plugins {
     id 'application'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
@@ -43,4 +48,21 @@ application {
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
+}
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Main-Class": "gateway.Gateway"
+        )
+    }
+    outputs.upToDateWhen{false}
+    project.archivesBaseName = "Gateway"
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
 }
