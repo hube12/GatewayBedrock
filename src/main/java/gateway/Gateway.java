@@ -18,12 +18,23 @@ class GatewayChunk {
         this.py = py;
         this.pz = pz;
     }
+
+    @Override
+    public String toString() {
+        return "GatewayChunk{" +
+                "cx=" + cx +
+                ", cz=" + cz +
+                ", px=" + px +
+                ", py=" + py +
+                ", pz=" + pz +
+                '}';
+    }
 }
 
 public class Gateway {
 
     static public GatewayChunk getGatewayChunk(int cx, int cz) {
-        Random r = new Random(cx * 341873128712L + cz * 132897987541L);
+        Random r = new Random((long)cx  * 341873128712L + (long)cz * 132897987541L);
         int chorus_plants = r.nextInt(5);
         // ignore all chunks with chorus plants
         if (chorus_plants == 0) {
@@ -63,9 +74,10 @@ public class Gateway {
     }
 
     public static int sub(int chunkX, int chunkZ, long seed, int count) {
-        if ((chunkX * chunkX + chunkZ * chunkZ) > 4096) {
-            GatewayChunk c = Gateway.getGatewayChunk(chunkX, chunkZ);
-            if (c != null) {
+        for (int i = 0; i < 4; i++) {
+            int cx=chunkX+(i%2);
+            int cz=chunkZ+(i/2);
+
                 if ((c.px < 16) && (c.pz == 23)) {
                     EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
                     Biome biome = source.getBiome(16 * chunkX, 0, 16 * chunkZ);
