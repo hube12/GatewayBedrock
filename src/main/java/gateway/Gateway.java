@@ -52,30 +52,42 @@ public class Gateway {
         run(seed);
 
     }
-
-    public static void run(long seed) {
-        int count=5;
-        int r = 10000;
-        for (int x = -r; x < r; x++) {
-            for (int z = -r; z < r; z++) {
-                if (16 * 16 * (x * x + z * z) > 4096) {
-                    GatewayChunk c = Gateway.getGatewayChunk(x, z);
-                    if (c != null) {
-                        if ((c.px < 16) && (c.pz == 23)) {
-                            EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
-                            Biome biome = source.getBiome(16*x, 0, 16*z);
-                            if(biome == Biome.END_HIGHLANDS){
-                                System.out.println("/tp @p " +16*c.cx + " 90 " + 16*c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
-                                if (count<0){
-                                    return;
-                                }
-                                count--;
-                            }
-
+    public static int sub(int x,int z, long seed,int count){
+        if (16 * 16 * (x * x + z * z) > 4096) {
+            GatewayChunk c = Gateway.getGatewayChunk(x, z);
+            if (c != null) {
+                if ((c.px < 16) && (c.pz == 23)) {
+                    EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
+                    Biome biome = source.getBiome(16 * x, 0, 16 * z);
+                    if (biome == Biome.END_HIGHLANDS) {
+                        System.out.println("/tp @p " + 16 * c.cx + " 90 " + 16 * c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
+                        if (count < 0) {
+                            return count;
                         }
+                        count--;
                     }
+
                 }
             }
         }
+        return count;
+    }
+    public static void run(long seed) {
+        int count=5;
+        for (int r = 0; r < 10000; r++) {
+            for (int x = -r; x < r; x++) {
+                count=sub(x,-r,seed,count);
+                count=sub(x,r,seed,count);
+            }
+            for (int z = -r; z < r; z++) {
+                count=sub(-r,z,seed,count);
+                count=sub(r,z,seed,count);
+            }
+            if (count<0){
+                return;
+            }
+        }
+
+
     }
 }
