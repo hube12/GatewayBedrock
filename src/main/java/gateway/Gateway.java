@@ -81,11 +81,13 @@ public class Gateway {
         if ((chunkX * chunkX + chunkZ * chunkZ) > 4096) {
             GatewayChunk c = Gateway.getGatewayChunk(chunkX, chunkZ);
             if (c != null) {
-                if ((c.px < 16) && (c.pz == 23)) {
+                if (c.pz > 15) {
                     EndBiomeSource source = new EndBiomeSource(MCVersion.v1_16, seed);
                     Biome biome = source.getBiome(16 * chunkX, 0, 16 * chunkZ);
-                    if (biome == Biome.END_HIGHLANDS && !flag) {
+                    if (biome == Biome.END_HIGHLANDS ) {
                         System.out.println("/tp @p " + 16 * c.cx + " 90 " + 16 * c.cz + " with offset " + c.px + " " + c.py + " " + c.pz);
+                        System.out.println("The gateway will spawn "+ c.py + " blocks above the ground at " + (16 * c.cx + c.px) +" "+ (16 * c.cz + c.pz));
+                        System.out.println("The chunk to savestate is "+c.cx + " " + c.cz+"\n");
                         flag = true;
                     }
 
